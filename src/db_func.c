@@ -13,7 +13,6 @@
 
 int db_open ( sqlite3 **db, char *db_file_name )
 {
-	printf ( "%s\n", db_file_name );
 	int result = 0;
 	result = sqlite3_open( db_file_name, db );
 	if ( result != SQLITE_OK )
@@ -24,7 +23,6 @@ int db_open ( sqlite3 **db, char *db_file_name )
 	else
 	{
 		/*enable extended sqlite error code*/
-
 		int result = sqlite3_extended_result_codes( *db, 1 );
 		if ( 	result )
 		{
@@ -156,30 +154,6 @@ s_list *get_fields_names ( sqlite3 *db, char *table_name )
 	} while(result == SQLITE_SCHEMA);
 	return list;
 }
-
-
-/*
-int printf_db_struct ( sqlite3 *db )
-{
-	s_list *tables = init_list();
-	int i = 0;
-	int j = 0;
-	int result = 0;
-	result = get_tables_names( db, tables );
-	for( i = 0; i < tables.count; i++ )
-	{
-		printf( "%s \n", tables->str[i] );
-		KeyValueList_t tableStruct;
-		initKVList( &tableStruct, 10 );
-		get_table_struct( db, &tableStruct, tables.list[i] );
-		for( j = 0; j < tableStruct.count; j++ )
-		{
-			printf( "\t %s \n", tableStruct.pKey[j] );
-		}
-	}
-	return 0;
-}
-*/
 
 int print_col ( sqlite3_stmt * pStmt, int col )
 {
