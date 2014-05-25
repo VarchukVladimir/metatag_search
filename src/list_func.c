@@ -18,11 +18,11 @@ s_list *init_list ()
 
 	if ( !list )
 	{
-		MEM_ERROR(NULL);
+		MEM_ERROR( NULL );
 	}
 	if ( !( list->str = malloc( sizeof(char *) * INIT_LIST_SIZE ) ) )
 	{
-		MEM_ERROR(NULL);
+		MEM_ERROR( NULL );
 	}
 	list->count = 0;
 	list->max_count = INIT_LIST_SIZE;
@@ -38,25 +38,25 @@ kvo_list *init_list_kvo ()
 
 	if ( !list )
 	{
-		MEM_ERROR(NULL);
+		MEM_ERROR( NULL );
 	}
 	if ( !( list->key = malloc( sizeof(char *) * INIT_LIST_SIZE ) ) )
 	{
 		free( list );
-		MEM_ERROR(NULL);
+		MEM_ERROR( NULL );
 	}
 	if ( !( list->val = malloc( sizeof(char *) * INIT_LIST_SIZE ) ) )
 	{
 		free( list->key );
 		free( list );
-		MEM_ERROR(NULL);
+		MEM_ERROR( NULL );
 	}
 	if ( !( list->op = malloc( sizeof(char *) * INIT_LIST_SIZE ) ) )
 	{
 		free( list->key );
 		free( list->val );
 		free( list );
-		MEM_ERROR(NULL);
+		MEM_ERROR( NULL );
 	}
 	list->count = 0;
 	list->max_count = INIT_LIST_SIZE;
@@ -81,7 +81,7 @@ int check_list_size ( s_list *list )
 		}
 		else
 		{
-			MEM_ERROR();
+			MEM_ERROR( );
 		}
 	}
 	return 0;
@@ -103,7 +103,7 @@ int add_to_list ( const char *str, s_list *list )
 		}
 		else
 		{
-			MEM_ERROR();
+			MEM_ERROR( );
 		}
 	}
 
@@ -112,7 +112,7 @@ int add_to_list ( const char *str, s_list *list )
 		list->str[list->count] = (char *) malloc( sizeof(char) * ( strlen( str ) + 1 ) );
 		if ( !list->str[list->count] )
 		{
-			MEM_ERROR(-1);
+			MEM_ERROR( -1 );
 		}
 		strncpy( list->str[list->count], str, strlen( str ) + 1 );
 	}
@@ -142,7 +142,7 @@ int add_to_list_kvo ( const char *key, const char *val, const char *op, kvo_list
 		}
 		else
 		{
-			MEM_ERROR(-1);
+			MEM_ERROR( -1 );
 		}
 		// val realloc
 		temp_list = (char **) realloc( list->val, sizeof(char *) * list->max_count * 2 + 1 );
@@ -152,7 +152,7 @@ int add_to_list_kvo ( const char *key, const char *val, const char *op, kvo_list
 		}
 		else
 		{
-			MEM_ERROR(-1);
+			MEM_ERROR( -1 );
 		}
 		// op realloc
 		temp_list = (char **) realloc( list->op, sizeof(char *) * list->max_count * 2 + 1 );
@@ -162,18 +162,17 @@ int add_to_list_kvo ( const char *key, const char *val, const char *op, kvo_list
 		}
 		else
 		{
-			MEM_ERROR(-1);
+			MEM_ERROR( -1 );
 		}
 		list->max_count *= 2;
 	}
-
 
 	if ( key != NULL )
 	{
 		list->key[list->count] = (char *) malloc( sizeof(char) * ( strlen( key ) + 1 ) );
 		if ( !list->key[list->count] )
 		{
-			MEM_ERROR(-1);
+			MEM_ERROR( -1 );
 		}
 		strncpy( list->key[list->count], key, strlen( key ) + 1 );
 	}
@@ -187,7 +186,7 @@ int add_to_list_kvo ( const char *key, const char *val, const char *op, kvo_list
 		list->val[list->count] = (char *) malloc( sizeof(char) * ( strlen( val ) + 1 ) );
 		if ( !list->val[list->count] )
 		{
-			MEM_ERROR(-1);
+			MEM_ERROR( -1 );
 		}
 		strncpy( list->val[list->count], val, strlen( val ) + 1 );
 	}
@@ -201,7 +200,7 @@ int add_to_list_kvo ( const char *key, const char *val, const char *op, kvo_list
 		list->op[list->count] = (char *) malloc( sizeof(char) * ( strlen( op ) + 1 ) );
 		if ( !list->op[list->count] )
 		{
-			MEM_ERROR(-1);
+			MEM_ERROR( -1 );
 		}
 		strncpy( list->op[list->count], op, strlen( op ) + 1 );
 	}
@@ -219,9 +218,9 @@ void free_s_list ( s_list *list )
 	int i = 0;
 	if ( !list )
 		return;
-	for ( i = 0; i < list->count; i++ )
-		free(list->str[i]);
-	free (list);
+	for( i = 0; i < list->count; i++ )
+		free( list->str[i] );
+	free( list );
 	return;
 }
 
@@ -230,12 +229,12 @@ void free_kvo_list ( kvo_list *list )
 	int i = 0;
 	if ( !list )
 		return;
-	for ( i = 0; i < list->count; i++ )
+	for( i = 0; i < list->count; i++ )
 	{
-		free(list->key[i]);
-		free(list->val[i]);
-		free(list->op[i]);
+		free( list->key[i] );
+		free( list->val[i] );
+		free( list->op[i] );
 	}
-	free (list);
+	free( list );
 	return;
 }

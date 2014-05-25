@@ -17,5 +17,4 @@
 
 #define TEST
 
-
 #endif /* M_SEARCH_H_ */

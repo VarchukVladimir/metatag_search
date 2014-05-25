@@ -10,9 +10,13 @@
 
 #include "list_func.h"
 
-typedef enum { key_str, val_str, op_str } str_part;
+typedef enum
+{
+	key_str, val_str, op_str
+} str_part;
 
-typedef struct {
+typedef struct
+{
 	kvo_list *list_kvo;
 	s_list *bool_operators;
 	char *db_name;
@@ -22,7 +26,6 @@ typedef struct {
 
 extern char *legal_op_list[];
 extern char *legal_bool_op_list[];
-
 
 char *get_str_part ( char *, str_part );
 opts_t *parse_args_m ( int, char ** );
