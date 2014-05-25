@@ -12,8 +12,9 @@
 #include "m_search.h"
 #include "db_func.h"
 #include "list_func.h"
-#include "parse_args.h"
+#include "parse_args_m.h"
 
+#define TEST
 #undef TEST
 
 char *create_SQL_str ( opts_t *opts )
@@ -50,7 +51,7 @@ int main ( int argc, char **argv )
 	opts_t *opt = NULL;
 	int i = 0, j = 0;
 
-	if ( (opt = parse_args( argc, argv )) == NULL )
+	if ( (opt = parse_args_m( argc, argv )) == NULL )
 		return -1;
 #ifdef TEST
 	printf ( "db_name %s\n", opt->db_name );

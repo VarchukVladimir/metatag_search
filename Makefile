@@ -1,12 +1,12 @@
-#CC = x86_64-nacl-gcc
-CC = gcc
+CC = x86_64-nacl-gcc
+#CC = gcc
 CCFLAGS = -g -O0
 LIBS = -lsqlite3
 
 APP_NAME = m_search
 
-OBJS = obj/m_search.o obj/db_func.o obj/list_func.o obj/parse_args.o 
-SRC = src/m_search.c src/db_func.c src/list_func.c src/parse_args.c
+OBJS = obj/m_search.o obj/db_func.o obj/list_func.o obj/parse_args_m.o 
+SRC = src/m_search.c src/db_func.c src/list_func.c src/parse_args_m.c
 
 all: create_dirs $(APP_NAME)
 
@@ -25,7 +25,7 @@ obj/db_func.o: src/db_func.c
 obj/list_func.o: src/list_func.c
 	$(CC) -c -o $@ $^ $(CCFLAGS)
 
-obj/parse_args.o: src/parse_args.c
+obj/parse_args_m.o: src/parse_args_m.c
 	$(CC) -c -o $@ $^ $(CCFLAGS)
 
 clean:
