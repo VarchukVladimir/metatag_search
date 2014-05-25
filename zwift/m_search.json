@@ -1,0 +1,16 @@
+[
+    {
+    	"name" : "search",
+	"exec" : 
+        {
+	       	"path" : "swift://~/nexes/m_search",
+          	"args" : "-kvo name:%index%"
+        },
+		"file_list" : 
+		[
+			{"device" : "input", "path" : "swift://~/gutenberg_index"},
+          		{"device" : "stdout"},
+			{"device" : "stderr"}
+		]
+	}
+]
