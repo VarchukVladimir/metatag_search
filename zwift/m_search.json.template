@@ -1,0 +1,16 @@
+[
+    {
+    	"name" : "search",
+	"exec" : 
+        {
+	       	"path" : "swift://~/nexes/m_search",
+          	"args" : "{ARGS}"
+        },
+		"file_list" : 
+		[
+			{"device" : "input", "path" : "swift://~/{CONTAINER_NAME}"},
+          		{"device" : "stdout"},
+			{"device" : "stderr"}
+		]
+	}
+]
