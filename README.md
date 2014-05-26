@@ -3,7 +3,7 @@
 
 ## Prerequisites
 
-Install \n
+Install 
 [sqlite](https://github.com/zerovm/zerovm-ports/blob/master/sqlite/README.md)
 
 ## Building
