@@ -52,7 +52,10 @@ int main ( int argc, char **argv )
 	int i = 0, j = 0;
 
 	if ( ( opt = parse_args_m( argc, argv ) ) == NULL )
+	{
+		printf ("%s\n", USAGE);
 		return -1;
+	}
 #ifdef TEST
 	printf ( "db_name %s\n", opt->db_name );
 	printf ( "SQL     %s\n", opt->SQL );
