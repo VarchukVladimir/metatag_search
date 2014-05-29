@@ -1,5 +1,5 @@
-#CC = x86_64-nacl-gcc
-CC = gcc
+CC = x86_64-nacl-gcc
+#CC = gcc
 CCFLAGS = -g -O0
 LIBS = -lsqlite3
 
