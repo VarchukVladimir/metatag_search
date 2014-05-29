@@ -26,6 +26,8 @@ typedef struct
 
 extern char *legal_op_list[];
 extern char *legal_bool_op_list[];
+extern char *date_format[];
+extern char *date_field[];
 
 char *get_str_part ( char *, str_part );
 opts_t *parse_args_m ( int, char ** );
