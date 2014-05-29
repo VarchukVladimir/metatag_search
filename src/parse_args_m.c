@@ -8,12 +8,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "parse_args_m.h"
 #include "list_func.h"
 #include "m_search.h"
 
 char *legal_op_list[] = { "!=", "<=", ">=", "=", "<", ">", "like" };
 char *legal_bool_op_list[] = { "or", "and" };
+char *date_format[] = {"%d.%m.%Y", "%d.%m.%Y %H:%M:%S", "%m/%d/%Y", "%m/%d/%Y %H:%M:%S",};
+char *date_field[] = { "created_at" };
+
+extern char *strptime (__const char *__restrict __s,
+		       __const char *__restrict __fmt, struct tm *__tp);
+
+int convert_date_fields ( opts_t *opt )
+{
+	int i = 0, j = 0, format_index = 0;
+	int field_list_size = sizeof( date_field ) / sizeof( date_field[0] );
+	int format_list_size = sizeof( date_format ) / sizeof( date_format[0] );
+
+	if ( opt != NULL )
+		for( i = 0; i < opt->list_kvo->count; i++ )
+		{
+			for( j = 0; j < field_list_size; j++ )
+			{
+				if ( opt->list_kvo->val[i] != NULL && strcasecmp( date_field[j], opt->list_kvo->key[i] ) == 0 )
+				{
+					char *temp_buf = NULL;
+					int k = 0;
+					for( k = 0; k < format_list_size; k++ )
+					{
+						struct tm *ltm = malloc( sizeof(struct tm) );
+						char *p;
+						p = strptime( opt->list_kvo->val[i], date_format[k], ltm );
+						if ( p != NULL )
+						{
+							temp_buf = malloc( sizeof( 256 ) );
+							time_t t = mktime( ltm );
+							snprintf( temp_buf, 256, "%zu", t );
+							free( opt->list_kvo->val[i] );
+							opt->list_kvo->val[i] = temp_buf;
+						}
+					}
+				}
+			}
+		}
+
+	return 0;
+}
 
 int check_legal_op ( char *op )
 {
@@ -59,21 +101,22 @@ opts_t *parse_args_m ( int argc, char **argv )
 
 	opts_t *opts = NULL;
 	int kvo = 0;
-	int b = 0;
 	int not_sql = 0;
 	opts = malloc( sizeof(opts_t) );
 
 	opts->db_name = strdup( DEFAULT_INPUT_DB_DEVICE );
 	opts->table = strdup( DEFAULT_TABLE_NAME );
 
-	for( i = 0; i < argc; i++ )
+	if ( argc < 2 )
+		return NULL;
+
+	for( i = 1; i < argc; i++ )
 	{
 		if ( ( strcasecmp( argv[i], "-d" ) == 0 ) && ( i + 1 < argc ) )
 		{
 			opts->db_name = malloc( strlen( argv[i + 1] ) + 1 );
 			memcpy( opts->db_name, argv[i + 1], strlen( argv[i + 1] ) + 1 );
 			kvo = 0;
-			b = 0;
 			i++;
 			continue;
 		}
@@ -84,7 +127,6 @@ opts_t *parse_args_m ( int argc, char **argv )
 			memcpy( buff, argv[i + 1], strlen( argv[i + 1] ) + 1 );
 			opts->table = buff;
 			kvo = 0;
-			b = 0;
 			i++;
 			not_sql = 1;
 			continue;
@@ -102,36 +144,35 @@ opts_t *parse_args_m ( int argc, char **argv )
 				snprintf( buff + strlen( buff ), sql_len - strlen( buff ), "%s ", argv[j] );
 
 			opts->SQL = buff;
+			free (opts->table);
 			opts->table = NULL;
 			opts->list_kvo = init_list_kvo( );
 			opts->bool_operators = init_list( );
 			return opts;
 		}
 
-		if ( b == 1 && !( ( strcasecmp( argv[i], "-kvo" ) == 0 ) || ( strcasecmp( argv[i], "-t" ) == 0 ) || ( strcasecmp( argv[i], "-d" ) == 0 ) ) )
+		char *pkey = get_str_part( argv[i], key_str );
+		char *pop = get_str_part( argv[i], op_str );
+		char *pval = get_str_part( argv[i], val_str );
+		int add_op = 0;
+		if ( ( kvo == 1 ) 	&& ( strcasecmp( argv[i], "or" ) != 0 ) && ( strcasecmp( argv[i], "and" ) != 0 ))
+		{
+			if ( add_to_list_kvo( pkey, pval, pop, list_kvo ) != 0)
+				return NULL;
+		}
+		else if ( kvo == 1 && ( ( strcasecmp( argv[i], "or" ) == 0 ) || ( strcasecmp( argv[i], "and" ) == 0 )) )
+		{
+			add_op = 1;
 			add_to_list( argv[i], list_ops );
-		else
+		}
+		else if (kvo == 1)
 		{
-			b = 0;
+			return NULL;
 		}
 
-		if ( kvo == 1 && !( ( strcasecmp( argv[i], "-b" ) == 0 ) || ( strcasecmp( argv[i], "-t" ) == 0 ) || ( strcasecmp( argv[i], "-d" ) == 0 ) ) )
-			add_to_list_kvo( get_str_part( argv[i], key_str ), get_str_part( argv[i], val_str ), get_str_part( argv[i], op_str ), list_kvo );
-		else
-		{
-			kvo = 0;
-		}
-
-		if ( ( strcasecmp( argv[i], "-kvo" ) == 0 ) && ( i + 1 < argc ) )
+		if ( ( strcasecmp( argv[i], "-r" ) == 0 ) && ( i + 1 < argc ) )
 		{
 			kvo = 1;
-			b = 0;
-			not_sql = 1;
-		}
-		if ( ( strcasecmp( argv[i], "-b" ) == 0 ) && ( i + 1 < argc ) )
-		{
-			kvo = 0;
-			b = 1;
 			not_sql = 1;
 		}
 	}
@@ -163,6 +204,9 @@ opts_t *parse_args_m ( int argc, char **argv )
 
 	opts->bool_operators = list_ops;
 	opts->list_kvo = list_kvo;
+
+	convert_date_fields ( opts );
+
 	return opts;
 }
 
