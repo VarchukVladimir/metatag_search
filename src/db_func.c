@@ -9,7 +9,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sqlite3.h>
+#include <time.h>
 #include "db_func.h"
+
+#undef TEST
 
 int db_open ( sqlite3 **db, char *db_file_name )
 {
@@ -63,6 +66,9 @@ int exec_SQL ( sqlite3* db, const char* SQL  )
 
 	if ( !SQL )
 		return -1;
+#ifdef TEST
+	printf ( "exec SQL %s\n", SQL );
+#endif
 	result = sqlite3_prepare( db, SQL, -1, &pStmt, 0 );
 	if ( result == SQLITE_OK && pStmt != NULL )
 	{
@@ -157,7 +163,6 @@ s_list *get_fields_names ( sqlite3 *db, char *table_name )
 
 int print_col ( sqlite3_stmt * pStmt, int col )
 {
-
 	switch (sqlite3_column_type( pStmt, col ))
 	{
 	case SQLITE_INTEGER:
@@ -167,7 +172,20 @@ int print_col ( sqlite3_stmt * pStmt, int col )
 		printf( "%f; ", sqlite3_column_double( pStmt, col ) );
 		break;
 	case SQLITE_TEXT:
-		printf( "%s; ", sqlite3_column_text( pStmt, col ) );
+		if ( strcasecmp ( sqlite3_column_name( pStmt, col ), "created_at" ) == 0 )
+		{
+			time_t time_field = 0, *ptime_field = &time_field;
+			time_field = atoi ( sqlite3_column_text( pStmt, col ));
+			char *buff = malloc (sizeof (char) * 256);
+			buff = ctime ( ptime_field );
+			if (buff != NULL )
+				buff [strlen ( buff ) - 1] = '\0';
+			printf( "%s; ", buff);
+		}
+		else
+		{
+			printf( "%s; ", sqlite3_column_text( pStmt, col ) );
+		}
 		break;
 	case SQLITE_BLOB:
 		printf("BLOB; ");
