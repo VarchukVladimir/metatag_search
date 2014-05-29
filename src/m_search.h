@@ -25,5 +25,4 @@
 	m_search -d ~/test.db -s SELECT * FROM object\n"
 #define TEST
 
-
 #endif /* M_SEARCH_H_ */

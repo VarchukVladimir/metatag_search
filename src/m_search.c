@@ -53,7 +53,7 @@ int main ( int argc, char **argv )
 
 	if ( ( opt = parse_args_m( argc, argv ) ) == NULL )
 	{
-		printf ("%s\n", USAGE);
+		printf( "%s\n", USAGE );
 		return -1;
 	}
 #ifdef TEST

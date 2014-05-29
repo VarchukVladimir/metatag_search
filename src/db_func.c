@@ -27,7 +27,7 @@ int db_open ( sqlite3 **db, char *db_file_name )
 	{
 		/*enable extended sqlite error code*/
 		int result = sqlite3_extended_result_codes( *db, 1 );
-		if ( 	result )
+		if ( result )
 		{
 			databaseError( *db );
 			return -1;
@@ -58,7 +58,7 @@ int db_open ( sqlite3 **db, char *db_file_name )
 	return result;
 }
 
-int exec_SQL ( sqlite3* db, const char* SQL  )
+int exec_SQL ( sqlite3* db, const char* SQL )
 {
 	sqlite3_stmt *pStmt = 0;
 	int result = 0;
@@ -118,7 +118,7 @@ int get_tables_names ( sqlite3 *db, s_list *list )
 		}
 		while(( result = sqlite3_step( pStmt ) ) == SQLITE_ROW)
 		{
-			add_to_list(sqlite3_column_text( pStmt, 0 ), list);
+			add_to_list( sqlite3_column_text( pStmt, 0 ), list );
 		}
 		result = sqlite3_finalize( pStmt );
 	} while(result == SQLITE_SCHEMA);
@@ -138,7 +138,7 @@ s_list *get_fields_names ( sqlite3 *db, char *table_name )
 	sqlite3_stmt *pStmt;
 	if ( !table_name )
 		return NULL;
-	if ( !(list = init_list()) )
+	if ( !( list = init_list( ) ) )
 		return NULL;
 	SQL_len = strlen( SQL_ ) + strlen( table_name );
 	SQL = malloc( sizeof(char) * ( SQL_len ) );
@@ -172,15 +172,15 @@ int print_col ( sqlite3_stmt * pStmt, int col )
 		printf( "%f; ", sqlite3_column_double( pStmt, col ) );
 		break;
 	case SQLITE_TEXT:
-		if ( strcasecmp ( sqlite3_column_name( pStmt, col ), "created_at" ) == 0 )
+		if ( strcasecmp( sqlite3_column_name( pStmt, col ), "created_at" ) == 0 )
 		{
 			time_t time_field = 0, *ptime_field = &time_field;
-			time_field = atoi ( sqlite3_column_text( pStmt, col ));
-			char *buff = malloc (sizeof (char) * 256);
-			buff = ctime ( ptime_field );
-			if (buff != NULL )
-				buff [strlen ( buff ) - 1] = '\0';
-			printf( "%s; ", buff);
+			time_field = atoi( sqlite3_column_text( pStmt, col ) );
+			char *buff = malloc( sizeof(char) * 256 );
+			buff = ctime( ptime_field );
+			if ( buff != NULL )
+				buff[strlen( buff ) - 1] = '\0';
+			printf( "%s; ", buff );
 		}
 		else
 		{
@@ -188,7 +188,7 @@ int print_col ( sqlite3_stmt * pStmt, int col )
 		}
 		break;
 	case SQLITE_BLOB:
-		printf("BLOB; ");
+		printf( "BLOB; " );
 		break;
 	case SQLITE_NULL:
 		printf( "Null; " );

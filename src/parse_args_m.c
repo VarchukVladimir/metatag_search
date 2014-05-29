@@ -15,11 +15,10 @@
 
 char *legal_op_list[] = { "!=", "<=", ">=", "=", "<", ">", "like" };
 char *legal_bool_op_list[] = { "or", "and" };
-char *date_format[] = {"%d.%m.%Y", "%d.%m.%Y %H:%M:%S", "%m/%d/%Y", "%m/%d/%Y %H:%M:%S",};
+char *date_format[] = { "%d.%m.%Y", "%d.%m.%Y %H:%M:%S", "%m/%d/%Y", "%m/%d/%Y %H:%M:%S", };
 char *date_field[] = { "created_at" };
 
-extern char *strptime (__const char *__restrict __s,
-		       __const char *__restrict __fmt, struct tm *__tp);
+extern char *strptime ( __const char *__restrict __s, __const char *__restrict __fmt, struct tm *__tp );
 
 int convert_date_fields ( opts_t *opt )
 {
@@ -144,7 +143,7 @@ opts_t *parse_args_m ( int argc, char **argv )
 				snprintf( buff + strlen( buff ), sql_len - strlen( buff ), "%s ", argv[j] );
 
 			opts->SQL = buff;
-			free (opts->table);
+			free( opts->table );
 			opts->table = NULL;
 			opts->list_kvo = init_list_kvo( );
 			opts->bool_operators = init_list( );
@@ -155,17 +154,17 @@ opts_t *parse_args_m ( int argc, char **argv )
 		char *pop = get_str_part( argv[i], op_str );
 		char *pval = get_str_part( argv[i], val_str );
 		int add_op = 0;
-		if ( ( kvo == 1 ) 	&& ( strcasecmp( argv[i], "or" ) != 0 ) && ( strcasecmp( argv[i], "and" ) != 0 ))
+		if ( ( kvo == 1 ) && ( strcasecmp( argv[i], "or" ) != 0 ) && ( strcasecmp( argv[i], "and" ) != 0 ) )
 		{
-			if ( add_to_list_kvo( pkey, pval, pop, list_kvo ) != 0)
+			if ( add_to_list_kvo( pkey, pval, pop, list_kvo ) != 0 )
 				return NULL;
 		}
-		else if ( kvo == 1 && ( ( strcasecmp( argv[i], "or" ) == 0 ) || ( strcasecmp( argv[i], "and" ) == 0 )) )
+		else if ( kvo == 1 && ( ( strcasecmp( argv[i], "or" ) == 0 ) || ( strcasecmp( argv[i], "and" ) == 0 ) ) )
 		{
 			add_op = 1;
 			add_to_list( argv[i], list_ops );
 		}
-		else if (kvo == 1)
+		else if ( kvo == 1 )
 		{
 			return NULL;
 		}
@@ -205,7 +204,7 @@ opts_t *parse_args_m ( int argc, char **argv )
 	opts->bool_operators = list_ops;
 	opts->list_kvo = list_kvo;
 
-	convert_date_fields ( opts );
+	convert_date_fields( opts );
 
 	return opts;
 }

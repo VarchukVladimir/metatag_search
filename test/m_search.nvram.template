@@ -7,5 +7,6 @@ args=search {ARGS}
 
 #[debug]
 #verbosity=3
-
-
+	
+#[time]
+#seconds=1398163706
